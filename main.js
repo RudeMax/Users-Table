@@ -184,16 +184,4 @@ modalSaveBtn.addEventListener('click', function(){
     clearInput();
     usersMaster.push(newUser);
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
+// PUSHED
