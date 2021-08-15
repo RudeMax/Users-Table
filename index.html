@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIG TASK</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+</head>
+<body>
+    <div class="main-wrapper">
+    <button class="modal-button btn btn-outline-dark">Add User</button>
+        <div id="wrapper">
+            <table class="user table table-bordered"  >
+                
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>City, Street, Suite</th>
+                        <th>Company Name</th>
+                        <th>Zipcode</th>
+                        <th>Action Buttons</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal-bg">
+        <div class="modal-window">
+            <h2>Please provide your information</h2>
+            <h3>User name:</h3>
+            <label for="name">Name:</label>
+            <input type="text" class='name-input'>
+            
+            <label for="family-name">Family name:</label>
+            <input type="text" class='family-name-input'>
+            
+            <label for="email">Email:</label>
+            <input type="email" class='email-input'>
+            
+            <h3>Address:</h3>
+            <input type="hidden" name="user-id" class="id-input">
+            <label for="city">City:</label>
+            <input type="text" class='city-input'>
+            <label for="street">Street:</label>
+            <input type="text" class='street-input'>
+            <label for="suite">Suite:</label>
+            <input type="text" class='suite-input'>
+            
+            <h3>Company:</h3>
+            <label for="company">Company name:</label>
+            <input type="text" class='company-name-input'>
+            
+            <label for="zipcode">Zipcode:</label>
+            <input type="text" class='zipcode-input'>
+            <div class="modal-buttons">
+                <button class="modal-save-button btn btn-outline-success">Save</button>
+                <button class="modal-save-button-edit btn btn-outline-success">Save</button>
+                <button class="modal-cancel-button btn btn-outline-danger">Cancel</button>
+            </div> 
+        </div>
+    </div>
+    <script src="main.js"></script>  
+</body>
+</html>
