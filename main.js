@@ -27,9 +27,33 @@ const modalSuite = document.querySelector('#modal-suite');
 const modalCompany = document.querySelector('#modal-company');
 const modalZipcode = document.querySelector('#modal-zipcode');
 
-
-
 const table = document.querySelector('#table-body');
+
+let usersMaster = [];
+
+function fetchData() {
+    
+    fetch(requestURL)
+        .then(res => {
+            if (!res.ok) {
+                throw Error('ERROR');
+            }
+            return res.json();
+        })
+        .then(data => {
+            usersMaster = data;
+
+            for (const user of data) {
+                addRow(user);
+            }
+
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+fetchData();
 
 let lastUser;
 let currentEditableUser;
@@ -37,14 +61,9 @@ let currentEditableUser;
 function renderTable () {
     table.innerHTML = '';
     for (const user of usersMaster) {
-       
-        addRow(user);
-        
-    }
-    
+        addRow(user);   
+    };
 }
-
-
 
 function addRow(user) {
     const row = `
@@ -62,7 +81,6 @@ function addRow(user) {
 
     document.querySelector('#table-body').insertAdjacentHTML('beforeend', row);
     
-
     const userRow = document.getElementById(`row-${user.id}`);
     
     userRow.addEventListener('click', function(){
@@ -83,11 +101,9 @@ function addRow(user) {
         modal2Bg.classList.remove('bg-active');
     })
 
-
     const editBtn = document.getElementById(`edit-btn-${user.id}`);
     const deleteBtn = document.getElementById(`delete-btn-${user.id}`);
    
-
     deleteBtn.addEventListener('click', function(e){
         e.stopPropagation();
         const userId = deleteBtn.id.slice(11);
@@ -148,32 +164,6 @@ modalSaveEditBtn.addEventListener('click', function(){
     modalBg.classList.remove('bg-active');
     clearInput();
 })
-
-let usersMaster = [];
-
-function fetchData() {
-    
-    fetch(requestURL)
-        .then(res => {
-            if (!res.ok) {
-                throw Error('ERROR');
-            }
-            return res.json();
-        })
-        .then(data => {
-            usersMaster = data;
-
-            for (const user of data) {
-                addRow(user);
-            }
-
-        })
-        .catch(error => {
-            console.log(error);
-        });
-}
-
-fetchData();
 
 addUserBtn.addEventListener('click', function(){
     modalBg.classList.add('bg-active');
