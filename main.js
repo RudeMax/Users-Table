@@ -1,6 +1,7 @@
 const requestURL = 'https://jsonplaceholder.typicode.com/users';
 
 const modalBg = document.querySelector('.modal-bg');
+const modal2Bg = document.querySelector('.modal2-bg');
 
 const addUserBtn = document.querySelector('.modal-button');
 const modalSaveBtn = document.querySelector('.modal-save-button');
@@ -17,6 +18,17 @@ const suiteInput = document.querySelector('.suite-input');
 const companyInput = document.querySelector('.company-name-input');
 const zipcodeInput = document.querySelector('.zipcode-input');
 
+const modalName = document.querySelector('#modal-name');
+const modalFamilyName = document.querySelector('#modal-family-name');
+const modalEmail = document.querySelector('#modal-email');
+const modalCity = document.querySelector('#modal-city');
+const modalStreet = document.querySelector('#modal-street');
+const modalSuite = document.querySelector('#modal-suite');
+const modalCompany = document.querySelector('#modal-company');
+const modalZipcode = document.querySelector('#modal-zipcode');
+
+
+
 const table = document.querySelector('#table-body');
 
 let lastUser;
@@ -32,9 +44,11 @@ function renderTable () {
     
 }
 
+
+
 function addRow(user) {
     const row = `
-        <tr>
+        <tr id="row-${user.id}">
             <td>${user.id}</td>
             <td>${user.name} ${user.username}</td>
             <td>${user.email}</td>
@@ -48,17 +62,42 @@ function addRow(user) {
 
     document.querySelector('#table-body').insertAdjacentHTML('beforeend', row);
     
+
+    const userRow = document.getElementById(`row-${user.id}`);
+    
+    userRow.addEventListener('click', function(){
+        modal2Bg.classList.add('bg-active');
+        modalName.innerHTML = `${user.name}`;
+        modalFamilyName.innerHTML = `${user.username}`;
+        modalEmail.innerHTML = `${user.email}`;
+        modalCity.innerHTML = `${user.address.city}`;
+        modalStreet.innerHTML = `${user.address.street}`;
+        modalSuite.innerHTML = `${user.address.suite}`;
+        modalCompany.innerHTML = `${user.company.name}`;
+        modalZipcode.innerHTML = `${user.address.zipcode}`;
+    })
+
+    const modal2CloseButton = document.querySelector('.modal2-close-button');
+
+    modal2CloseButton.addEventListener('click', function(){
+        modal2Bg.classList.remove('bg-active');
+    })
+
+
     const editBtn = document.getElementById(`edit-btn-${user.id}`);
     const deleteBtn = document.getElementById(`delete-btn-${user.id}`);
    
-    deleteBtn.addEventListener('click', function(){
+
+    deleteBtn.addEventListener('click', function(e){
+        e.stopPropagation();
         const userId = deleteBtn.id.slice(11);
         usersMaster = usersMaster.filter(item => item.id != userId);
         renderTable();
         console.log(usersMaster);
     })
     
-    editBtn.addEventListener('click', function(){
+    editBtn.addEventListener('click', function(e){
+        e.stopPropagation();
         modalBg.classList.add('bg-active');
 
         idInput.value = user.id;
@@ -112,7 +151,6 @@ modalSaveEditBtn.addEventListener('click', function(){
 
 let usersMaster = [];
 
-
 function fetchData() {
     
     fetch(requestURL)
@@ -136,8 +174,6 @@ function fetchData() {
 }
 
 fetchData();
-
-
 
 addUserBtn.addEventListener('click', function(){
     modalBg.classList.add('bg-active');
@@ -165,7 +201,9 @@ modalCancelBtn.addEventListener('click', function(){
 modalSaveBtn.addEventListener('click', function(){
     let newUser = {};
     lastUser = usersMaster.length;
-    newUser.id = lastUser + 1;
+    for (let user of usersMaster) {
+        newUser.id = user.id + 1;
+    };
     newUser.name = nameInput.value;
     newUser.username = familyNameInput.value;
     newUser.email = emailInput.value;
@@ -183,5 +221,65 @@ modalSaveBtn.addEventListener('click', function(){
     addRow(newUser);
     clearInput();
     usersMaster.push(newUser);
+    renderTable();
 })
-// PUSHED
+
+let sortDirection = false;
+
+function sortColumn(columnName) {
+    const dataType = typeof usersMaster[0][columnName];
+    sortDirection = !sortDirection;
+
+    if (columnName === 'city') {
+        usersMaster = usersMaster.sort((u1, u2) => {
+            return sortDirection 
+                ? u1.address.city.localeCompare(u2.address.city) 
+                : u2.address.city.localeCompare(u1.address.city);
+        });
+    }
+
+    if (columnName === 'zipcode') {
+        usersMaster = usersMaster.sort((u1, u2) => {
+            return sortDirection 
+                ? u1.address.zipcode.localeCompare(u2.address.zipcode) 
+                : u2.address.zipcode.localeCompare(u1.address.zipcode);
+        });
+    }
+
+    if (columnName === 'company') {
+        usersMaster = usersMaster.sort((u1, u2) => {
+            return sortDirection 
+                ? u1.company.name.localeCompare(u2.company.name) 
+                : u2.company.name.localeCompare(u1.company.name);
+        });
+    }
+    
+    switch(dataType){
+        case 'number' :
+        sortNumberColumn(sortDirection, columnName);
+        break;
+        case 'string' :
+        sortStringColumn(sortDirection, columnName);
+        break;
+    };
+    renderTable();
+}
+
+function sortNumberColumn(sort, columnName){
+    usersMaster = usersMaster.sort((u1, u2) => {
+        return sort 
+        ? u1[columnName] - u2[columnName] 
+        : u2[columnName] - u1[columnName];
+    });
+}
+
+function sortStringColumn(sort, columnName){
+    usersMaster = usersMaster.sort((u1, u2) => {
+        return sort 
+            ? u1[columnName].localeCompare(u2[columnName]) 
+            : u2[columnName].localeCompare(u1[columnName]);
+    });
+    
+}
+
+
